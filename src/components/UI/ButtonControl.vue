@@ -1,9 +1,16 @@
 <template>
-  <button class="btnGen" v-on="$listeners">Generate Params</button>
+  <button class="btnGen" v-on="$listeners">{{ name }}</button>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+};
 </script>
 
 <style lang="scss">

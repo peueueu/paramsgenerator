@@ -1,6 +1,6 @@
 <template>
   <div class="input-wrapper">
-    <label :for="name">{{name}}</label>
+    <label :for="name">{{ name }}</label>
     <input type="text" v-on="$listeners" />
   </div>
 </template>

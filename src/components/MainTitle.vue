@@ -1,11 +1,11 @@
 <template>
-  <h1 class="main_title">{{ mainTitle }}</h1>
+  <h1 class="main_title">{{ title }}</h1>
 </template>
 
 <script>
 export default {
   props: {
-    mainTitle: {
+    title: {
       type: String,
       default: "Vamo gerar?",
     },

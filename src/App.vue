@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MainTitle />
+    <MainTitle title="Params Generator" />
     <div class="container">
       <div class="input-controllers">
         <InputControl
@@ -12,18 +12,17 @@
           @input="handleNewSite($event.target.value)"
         />
       </div>
-      <ButtonControl @click="genParams" />
+      <ButtonControl @click="genParams" name="Generate Params" />
     </div>
 
-    <div class="code-wrapper">
-      <transition name="fade">
-        <div class="output-container" v-if="outputResponse">
-          <pre>{{ outputResponse }}</pre>
-        </div>
-      </transition>
-    </div>
+    <OutputModal
+      :response="outputResponse"
+      :show="isVisible"
+      @click="handleModalClose"
+    />
 
     <notifications group="success" position="top left" />
+    <notifications group="error" position="top right" />
     <notifications group="info" position="top center" />
   </div>
 </template>
@@ -32,6 +31,7 @@
 import MainTitle from "./components/MainTitle";
 import InputControl from "./components/UI/InputControl";
 import ButtonControl from "./components/UI/ButtonControl";
+import OutputModal from "./components/UI/OutputModal";
 
 export default {
   name: "app",
@@ -39,15 +39,20 @@ export default {
     MainTitle,
     InputControl,
     ButtonControl,
+    OutputModal,
   },
   data() {
     return {
       oldSiteUrl: "",
       newSiteUrl: "",
       outputResponse: "",
+      isVisible: false,
     };
   },
   methods: {
+    handleModalClose() {
+      this.isVisible = false;
+    },
     handleOldSite(value) {
       this.oldSiteUrl = value;
     },
@@ -55,10 +60,11 @@ export default {
       this.newSiteUrl = value;
     },
     genParams() {
-      console.log(this.newSiteUrl, this.oldSiteUrl);
       if (this.oldSiteUrl && this.newSiteUrl) {
+        this.isVisible = true;
         this.outputResponse = `
-        UPDATE wp_options SET option_value = replace(option_value, '${this.oldSiteUrl}','${this.newSiteUrl}') WHERE option_name = 'home' OR option_name = 'siteurl';
+        UPDATE wp_options SET option_value = replace(option_value, '${this.oldSiteUrl}','${this.newSiteUrl}')
+        WHERE option_name = 'home' OR option_name = 'siteurl';
         UPDATE wp_posts SET guid = replace(guid, '${this.oldSiteUrl}','${this.newSiteUrl}');
         UPDATE wp_posts SET post_content = replace(post_content, '${this.oldSiteUrl}','${this.newSiteUrl}');
         UPDATE wp_postmeta SET meta_value = replace(meta_value,'${this.oldSiteUrl}','${this.newSiteUrl}');
@@ -66,12 +72,10 @@ export default {
         `;
         this.$notify({
           group: "success",
+          type: "success",
           title: "E ainnnn manito 🐱‍👤",
           text: "Output Response generated with success!!! 😁😁",
         });
-        // setTimeout(() => {
-        //   this.outputResponse = "";
-        // }, 10000);
       } else {
         this.$notify({
           group: "info",
@@ -81,31 +85,31 @@ export default {
         });
       }
     },
-    // copyTestingCode() {
-    //   let testingCodeToCopy = document.querySelector("#testing-code");
-    //   testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
-    //   testingCodeToCopy.select();
-
-    //   try {
-    //     var successful = document.execCommand("copy");
-    //     var msg = successful ? "successful" : "unsuccessful";
-    //     alert("Testing code was copied " + msg);
-    //   } catch (err) {
-    //     alert("Oops, unable to copy");
-    //   }
-    // },
   },
 };
 </script>
 
 <style lang="scss">
 #app {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #345352;
+  background: linear-gradient(to bottom right, #003326, #003c3d);
 }
+
+// #app:before {
+//   content: "";
+//   position: absolute;
+//   z-index: -1;
+//   filter: hue-rotate(180deg);
+//   background: url("./assets/main-bg.jpg");
+//   width: 100%;
+//   height: 100vh;
+//   background-size: cotain;
+// }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -114,7 +118,8 @@ export default {
   height: 300px;
   padding: 40px;
   background: #021c26;
-  border-radius: 3px;
+  border-radius: 5px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .code-wrapper {
@@ -127,16 +132,5 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active em versões anteriores a 2.1.8 */ {
   opacity: 0;
-}
-
-.output-container {
-  padding: 50px;
-}
-
-.output-container pre {
-  color: white;
-  font-size: 1.25rem;
-  line-height: 28px;
-  font-weight: bold;
 }
 </style>
