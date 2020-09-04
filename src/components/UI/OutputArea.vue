@@ -4,7 +4,7 @@
       <div class="content-response" v-on="$listeners">{{ content }}</div>
       <input type="hidden" :value="content" :id="id" />
     </div>
-    <span class="tip">Click in the div to copy to clipboard. :)</span>
+    <span class="tip">Click in the the box to copy to clipboard. :)</span>
   </div>
 </template>
 
@@ -33,6 +33,7 @@ export default {
 }
 .content-response {
   max-width: 500px;
+  cursor: pointer;
 }
 .tip {
   display: block;

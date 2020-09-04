@@ -5,12 +5,8 @@
         <div class="wrapper-code">
           <div class="output-container">
             <!-- v-if="outputResponse" !-->
-            <OutputArea
-              :content="response"
-              @click.native.prevent="copyTestingCode"
-              id="testing-code"
-            />
-            <ButtonControl v-on="$listeners" class="close-btn" name="X" />
+            <OutputArea :content="response" @click="copyTestingCode" id="testing-code" />
+            <ButtonControl v-on="$listeners" class="close-btn" />
           </div>
         </div>
       </div>
@@ -94,13 +90,13 @@ export default {
   padding: 40px 30px;
 
   .close-btn {
-    border-radius: 50%;
-    font-size: 1.35rem;
-    padding: 2px 8px;
-    background: tomato;
+    background-repeat: no-repeat;
+    top: -34px;
+    right: -14px;
+    color: tomato;
     position: absolute;
-    top: -25px;
-    right: -7px;
+    height: 30px;
+    background: url("../../assets/close.svg");
   }
 }
 
